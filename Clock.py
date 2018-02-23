@@ -118,13 +118,14 @@ class Clock:
             aveStr = "Average = "
             pingLoc = pingStr.find(aveStr)
             self.ping = pingStr[pingLoc + len(aveStr):len(pingStr) - 4]
-            print("Your ping is "+self.ping+"ms")
         else:
             pingBuffer = subprocess.check_output(["ping",
             "-c", "4", "-q", "google.com"])
             pingStr = pingBuffer.decode()
             splitStr = pingStr.split("/")
-            print("Your average ping is "+splitStr[4])
+            self.ping = splitStr[4]
+            
+        print("Your ping is "+self.ping+"ms") 
 
 
     def update_time(self):
@@ -133,9 +134,13 @@ class Clock:
 
 clock = Clock()
 clock.get_ping()
-clock.update_time()
+#clock.update_time()
 #print(Clock.dateTime())
-get_events()
+#get_events()
+
+def ttkPing():
+        curPing.set(float(clock.get_ping()))
+        print(curPing)
 
 def calculate(*args):
     try:
@@ -145,15 +150,19 @@ def calculate(*args):
         pass
     
 root = Tk()
-root.title("Feet to Meters")
+root.title("Clock")
 
 mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
+curPing = StringVar()
 feet = StringVar()
 meters = StringVar()
+
+ttk.Label(mainframe, textvariable=curPing).grid(column=2, row=4, sticky=(W,E))
+ttk.Button(mainframe, text="Get Ping", command=ttkPing).grid(column=3,row=4,sticky=W)
 
 feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
 feet_entry.grid(column=2, row=1, sticky=(W, E))
