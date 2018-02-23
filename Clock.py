@@ -18,7 +18,6 @@ from tkinter import ttk
 
 try:
     import argparse
-
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 except ImportError:
     flags = None
@@ -146,15 +145,19 @@ def calculate(*args):
         pass
 
 root = Tk()
-root.title("Feet to Meters")
+root.title("Clock")
 
 mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
+curPing = StringVar()
 feet = StringVar()
 meters = StringVar()
+
+ttk.Label(mainframe, textvariable=curPing).grid(column=2, row=4, sticky=(W,E))
+ttk.Button(mainframe, text="Get Ping", command=ttkPing).grid(column=3,row=4,sticky=W)
 
 feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
 feet_entry.grid(column=2, row=1, sticky=(W, E))
