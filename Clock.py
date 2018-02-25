@@ -136,6 +136,9 @@ print("ping = ", clock.ping, "datetime = ", clock.date_time)
 print_events(clock.today_events, "today")
 print_events(clock.tomorrow_events, "tomorrow")
 
+def ttkPing():
+        curPing.set(float(clock.get_ping()))
+        print(curPing)
 
 def calculate(*args):
     try:
@@ -152,26 +155,48 @@ mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
-curPing = StringVar()
-feet = StringVar()
-meters = StringVar()
+displayValue = StringVar()
+changeFunc = StringVar()
 
-ttk.Label(mainframe, textvariable=curPing).grid(column=2, row=4, sticky=(W,E))
-ttk.Button(mainframe, text="Get Ping", command=ttkPing).grid(column=3,row=4,sticky=W)
+ttk.Label(mainframe, textvariable=displayValue).grid(column=1, row=1, sticky=E)
+updateButton = ttk.Button(mainframe, text='update', command=show_ping).grid(column=2, row=1, sticky=W)
+# changeButton = ttk.Button(mainframe, textvariable=changeFunc).grid(column=2, row=2, sticky=(N,W))
+
+
+'''def show_time(*args):
+    clock.update_time()
+    displayValue.set(clock.time)
+
+
+def show_date(*args):
+    clock.update_time()
+    displayValue.set(clock.date)
 
 feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
 feet_entry.grid(column=2, row=1, sticky=(W, E))
 
-ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(W, E))
-ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W)
+def change_function(*args):
+    
+    functiontext = changeFunc.get()
+    if functiontext == "Date":
+        changeFunc.set("Ping")
+        updateButton.configure(command=show_date)
+        show_date()
+    elif functiontext == "Ping":
+        changeFunc.set("Time")
+        updateButton.configure(command=show_ping)
+        show_ping()
+    else:
+        changeFunc.set("Date")
+        updateButton.configure(command=show_time)
+        show_time()
 
-ttk.Label(mainframe, text="feet").grid(column=3, row=1, sticky=W)
-ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=2, sticky=E)
-ttk.Label(mainframe, text="meters").grid(column=3, row=2, sticky=W)
 
-for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
+changeButton.config(command=change_function)
+change_function()'''
 
-feet_entry.focus()
-root.bind('<Return>', calculate)
+for child in mainframe.winfo_children(): child.grid_configure(padx=15, pady=15)
+
+root.bind('<Return>', show_ping)
 
 root.mainloop()
