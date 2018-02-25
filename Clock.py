@@ -136,16 +136,11 @@ print("ping = ", clock.ping, "datetime = ", clock.date_time)
 print_events(clock.today_events, "today")
 print_events(clock.tomorrow_events, "tomorrow")
 
-def ttkPing():
-        curPing.set(float(clock.get_ping()))
-        print(curPing)
 
-def calculate(*args):
-    try:
-        value = float(feet.get())
-        meters.set((0.3048 * value * 10000.0 + 0.5)/10000.0)
-    except ValueError:
-        pass
+def show_ping(*args):
+    clock.get_ping()
+    displayValue.set(clock.ping)
+
 
 root = Tk()
 root.title("Clock")
@@ -166,17 +161,11 @@ updateButton = ttk.Button(mainframe, text='update', command=show_ping).grid(colu
 '''def show_time(*args):
     clock.update_time()
     displayValue.set(clock.time)
-
-
 def show_date(*args):
     clock.update_time()
     displayValue.set(clock.date)
-
-feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
-feet_entry.grid(column=2, row=1, sticky=(W, E))
-
 def change_function(*args):
-    
+
     functiontext = changeFunc.get()
     if functiontext == "Date":
         changeFunc.set("Ping")
@@ -190,12 +179,11 @@ def change_function(*args):
         changeFunc.set("Date")
         updateButton.configure(command=show_time)
         show_time()
-
-
 changeButton.config(command=change_function)
 change_function()'''
 
-for child in mainframe.winfo_children(): child.grid_configure(padx=15, pady=15)
+for child in mainframe.winfo_children():
+    child.grid_configure(padx=15, pady=15)
 
 root.bind('<Return>', show_ping)
 
