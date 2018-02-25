@@ -125,8 +125,7 @@ class Clock:
             splitStr = pingStr.split("/")
             self.ping = splitStr[4]
             
-        print("Your ping is "+self.ping+"ms") 
-
+        #print("Your ping is "+self.ping+"ms")
 
     def update_time(self):
         self.dateTime = datetime.datetime.now()
@@ -138,17 +137,12 @@ clock.get_ping()
 #print(Clock.dateTime())
 #get_events()
 
-def ttkPing():
-        curPing.set(float(clock.get_ping()))
-        print(curPing)
 
-def calculate(*args):
-    try:
-        value = float(feet.get())
-        meters.set((0.3048 * value * 10000.0 + 0.5)/10000.0)
-    except ValueError:
-        pass
-    
+def show_ping(*args):
+    clock.get_ping()
+    displayValue.set(clock.ping)
+
+
 root = Tk()
 root.title("Clock")
 
@@ -157,26 +151,46 @@ mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
-curPing = StringVar()
-feet = StringVar()
-meters = StringVar()
+displayValue = StringVar()
+changeFunc = StringVar()
 
-ttk.Label(mainframe, textvariable=curPing).grid(column=2, row=4, sticky=(W,E))
-ttk.Button(mainframe, text="Get Ping", command=ttkPing).grid(column=3,row=4,sticky=W)
+ttk.Label(mainframe, textvariable=displayValue).grid(column=1, row=1, sticky=E)
+updateButton = ttk.Button(mainframe, text='update', command=show_ping).grid(column=2, row=1, sticky=W)
+# changeButton = ttk.Button(mainframe, textvariable=changeFunc).grid(column=2, row=2, sticky=(N,W))
 
-feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
-feet_entry.grid(column=2, row=1, sticky=(W, E))
 
-ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(W, E))
-ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W)
+'''def show_time(*args):
+    clock.update_time()
+    displayValue.set(clock.time)
 
-ttk.Label(mainframe, text="feet").grid(column=3, row=1, sticky=W)
-ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=2, sticky=E)
-ttk.Label(mainframe, text="meters").grid(column=3, row=2, sticky=W)
 
-for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
+def show_date(*args):
+    clock.update_time()
+    displayValue.set(clock.date)
 
-feet_entry.focus()
-root.bind('<Return>', calculate)
+
+def change_function(*args):
+    
+    functiontext = changeFunc.get()
+    if functiontext == "Date":
+        changeFunc.set("Ping")
+        updateButton.configure(command=show_date)
+        show_date()
+    elif functiontext == "Ping":
+        changeFunc.set("Time")
+        updateButton.configure(command=show_ping)
+        show_ping()
+    else:
+        changeFunc.set("Date")
+        updateButton.configure(command=show_time)
+        show_time()
+
+
+changeButton.config(command=change_function)
+change_function()'''
+
+for child in mainframe.winfo_children(): child.grid_configure(padx=15, pady=15)
+
+root.bind('<Return>', show_ping)
 
 root.mainloop()
