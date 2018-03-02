@@ -128,63 +128,103 @@ def print_events(event_list, day):
             print(start, event['summary'])
 
 
+'''def show_ping(disp):
+    clock.get_ping()
+    disp.pingvar.set(clock.ping)
+
+
+def show_time(disp):
+    clock.'''
+
+
+class Display:
+    def __init__(self):
+        root = Tk()
+        root.title("Clock")
+
+        mainframe = ttk.Frame(root, padding="3 3 12 12")
+        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        mainframe.columnconfigure(0, weight=1)
+        mainframe.rowconfigure(0, weight=1)
+        # self.pingframe = ttk.Frame(mainframe, padding="3 3 12 12")
+        self.pingframe = ttk.Frame(mainframe)
+        self.dateframe = ttk.Frame(mainframe)
+        self.timeframe = ttk.Frame(mainframe)
+        ttk.Button(mainframe, text='Change Function', command=self.change_function).grid(column=1, row=2, sticky=N)
+
+        '''self.dateframe.grid(column=1, row=1, sticky=S)
+        self.timeframe.grid(column=1, row=1, sticky=S)
+        self.pingframe.grid(column=1, row=1, sticky=S)'''
+        # self.dateframe.grid_forget()
+        # self.timeframe.grid_forget()
+
+        self.pingvar = StringVar()
+        self.update_ping()
+        self.timevar = StringVar()
+        self.update_time()
+        self.datevar = StringVar()
+        self.update_date()
+
+        ttk.Label(self.pingframe, textvariable=self.pingvar).grid(column=1, row=1, sticky=E)
+        ttk.Button(self.pingframe, text="Refresh", command=self.update_ping).grid(column=2, row=1, sticky=W)
+
+        ttk.Label(self.timeframe, textvariable=self.timevar).grid(column=1, row=1, sticky=E)
+        ttk.Button(self.timeframe, text="Refresh", command=self.update_time).grid(column=2, row=1, sticky=W)
+
+        ttk.Label(self.dateframe, textvariable=self.datevar).grid(column=1, row=1, sticky=E)
+        ttk.Button(self.dateframe, text="Refresh", command = self.update_ping).grid(column=2, row=1, sticky=W)
+
+        self.currentFrame = self.pingframe
+        self.change_function()
+
+        for child in mainframe.winfo_children():
+            child.grid_configure(padx=15, pady=15)
+
+        root.bind('<Return>', self.update_ping)
+        '''self.pingframe.bind('<Return>', self.update_ping)
+        self.dateframe.bind('<Return>', self.update_date)
+        self.timeframe.bind('<Return>', self.update_time)'''
+
+        root.mainloop()
+
+    def update_time(self):
+        clock.update_time()
+        self.timevar.set(clock.time)
+
+    def update_ping(self):
+        clock.get_ping()
+        self.pingvar.set(clock.ping)
+
+    def update_date(self):
+        clock.update_time()
+        self.datevar.set(clock.date)
+
+    def change_function(self):
+        if self.currentFrame == self.pingframe:
+            self.pingframe.grid_forget()
+            self.timeframe.grid(column=1, row=1, sticky=S)
+            self.currentFrame = self.timeframe
+        elif self.currentFrame == self.timeframe:
+            self.timeframe.grid_forget()
+            self.dateframe.grid(column=1, row=1, sticky=S)
+            self.currentFrame = self.dateframe
+        elif self.currentFrame == self.dateframe:
+            self.dateframe.grid_forget()
+            self.pingframe.grid(column=1, row=1, sticky=S)
+            self.currentFrame = self.pingframe
+        else:
+            self.currentFrame.grid_forget()
+            self.pingframe.grid(column=1, row=1, sticky=S)
+            self.currentFrame = self.pingframe
+
+
 clock = Clock()
-clock.get_ping()
+'''clock.get_ping()
 clock.update_time()
 clock.get_events()
 print("ping = ", clock.ping, "datetime = ", clock.date_time)
 print_events(clock.today_events, "today")
-print_events(clock.tomorrow_events, "tomorrow")
+print_events(clock.tomorrow_events, "tomorrow")'''
 
+display = Display()
 
-def show_ping(*args):
-    clock.get_ping()
-    displayValue.set(clock.ping)
-
-
-root = Tk()
-root.title("Clock")
-
-mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-mainframe.columnconfigure(0, weight=1)
-mainframe.rowconfigure(0, weight=1)
-
-displayValue = StringVar()
-changeFunc = StringVar()
-
-ttk.Label(mainframe, textvariable=displayValue).grid(column=1, row=1, sticky=E)
-updateButton = ttk.Button(mainframe, text='update', command=show_ping).grid(column=2, row=1, sticky=W)
-# changeButton = ttk.Button(mainframe, textvariable=changeFunc).grid(column=2, row=2, sticky=(N,W))
-
-
-'''def show_time(*args):
-    clock.update_time()
-    displayValue.set(clock.time)
-def show_date(*args):
-    clock.update_time()
-    displayValue.set(clock.date)
-def change_function(*args):
-
-    functiontext = changeFunc.get()
-    if functiontext == "Date":
-        changeFunc.set("Ping")
-        updateButton.configure(command=show_date)
-        show_date()
-    elif functiontext == "Ping":
-        changeFunc.set("Time")
-        updateButton.configure(command=show_ping)
-        show_ping()
-    else:
-        changeFunc.set("Date")
-        updateButton.configure(command=show_time)
-        show_time()
-changeButton.config(command=change_function)
-change_function()'''
-
-for child in mainframe.winfo_children():
-    child.grid_configure(padx=15, pady=15)
-
-root.bind('<Return>', show_ping)
-
-root.mainloop()
