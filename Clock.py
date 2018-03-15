@@ -12,7 +12,7 @@ from oauth2client.file import Storage
 import datetime
 import subprocess
 
-from tkinter import *
+import tkinter
 from tkinter import ttk
 
 
@@ -139,43 +139,55 @@ def show_time(disp):
 
 class Display:
     def __init__(self):
-        root = Tk()
+        root = tkinter.Tk()
         root.title("Clock")
 
         mainframe = ttk.Frame(root, padding="3 3 12 12")
-        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        mainframe.grid(column=0, row=0, sticky=(tkinter.N, tkinter.W, tkinter.E, tkinter.S))
         mainframe.columnconfigure(0, weight=1)
         mainframe.rowconfigure(0, weight=1)
-        # self.pingframe = ttk.Frame(mainframe, padding="3 3 12 12")
-        self.pingframe = ttk.Frame(mainframe)
-        self.dateframe = ttk.Frame(mainframe)
-        self.timeframe = ttk.Frame(mainframe)
-        ttk.Button(mainframe, text='Change Function', command=self.change_function).grid(column=1, row=2, sticky=N)
+
+        self.pingframe = ttk.Frame(mainframe, padding="3 3 12 12", class_='contentFrame')
+        self.pingframe.columnconfigure(0, minsize=110)
+
+        self.dateframe = ttk.Frame(mainframe, padding="3 3 12 12", class_='contentFrame')
+        self.dateframe.columnconfigure(0, minsize=110)
+
+        self.timeframe = ttk.Frame(mainframe, padding="3 3 12 12", class_='contentFrame')
+        self.timeframe.columnconfigure(0, minsize=110)
+
+        changefunc = ttk.Button(mainframe, text='Change Function', command=self.change_function)
+        changefunc.grid(column=0, row=2, sticky=tkinter.N)
 
         '''self.dateframe.grid(column=1, row=1, sticky=S)
         self.timeframe.grid(column=1, row=1, sticky=S)
         self.pingframe.grid(column=1, row=1, sticky=S)'''
-        # self.dateframe.grid_forget()
-        # self.timeframe.grid_forget()
+        # self.dateframe.grid_remove()
+        # self.timeframe.grid_remove()
 
-        self.pingvar = StringVar()
+        self.pingvar = tkinter.StringVar()
         self.update_ping()
-        self.timevar = StringVar()
+        self.timevar = tkinter.StringVar()
         self.update_time()
-        self.datevar = StringVar()
+        self.datevar = tkinter.StringVar()
         self.update_date()
 
-        ttk.Label(self.pingframe, textvariable=self.pingvar).grid(column=1, row=1, sticky=E)
-        ttk.Button(self.pingframe, text="Refresh", command=self.update_ping).grid(column=2, row=1, sticky=W)
+        pinglabel = ttk.Label(self.pingframe, textvariable=self.pingvar, class_='contentLabel')
+        pinglabel.grid(column=0, row=0, padx=10, pady=10)
+        pingbutton = ttk.Button(self.pingframe, text="Refresh", command=self.update_ping, class_='contentButton')
+        pingbutton.grid(column=1, row=0, padx=10, pady=10)
 
-        ttk.Label(self.timeframe, textvariable=self.timevar).grid(column=1, row=1, sticky=E)
-        ttk.Button(self.timeframe, text="Refresh", command=self.update_time).grid(column=2, row=1, sticky=W)
+        timelabel = ttk.Label(self.timeframe, textvariable=self.timevar, class_='contentLabel')
+        timelabel.grid(column=0, row=0, padx=10, pady=10)
+        timebutton = ttk.Button(self.timeframe, text="Refresh", command=self.update_time, class_='contentButton')
+        timebutton.grid(column=1, row=0, padx=10, pady=10)
 
-        ttk.Label(self.dateframe, textvariable=self.datevar).grid(column=1, row=1, sticky=E)
-        ttk.Button(self.dateframe, text="Refresh", command = self.update_ping).grid(column=2, row=1, sticky=W)
+        datelabel = ttk.Label(self.dateframe, textvariable=self.datevar, class_='contentLabel')
+        datelabel.grid(column=0, row=0, padx=10, pady=10)
+        datebutton = ttk.Button(self.dateframe, text="Refresh", command=self.update_date, class_='contentButton')
+        datebutton.grid(column=1, row=0, padx=10, pady=10)
 
-        self.currentFrame = self.pingframe
-        self.change_function()
+        self.currentFrame = self.timeframe
 
         for child in mainframe.winfo_children():
             child.grid_configure(padx=15, pady=15)
@@ -185,6 +197,7 @@ class Display:
         self.dateframe.bind('<Return>', self.update_date)
         self.timeframe.bind('<Return>', self.update_time)'''
 
+        self.change_function()
         root.mainloop()
 
     def update_time(self):
@@ -201,21 +214,24 @@ class Display:
 
     def change_function(self):
         if self.currentFrame == self.pingframe:
-            self.pingframe.grid_forget()
-            self.timeframe.grid(column=1, row=1, sticky=S)
+            self.pingframe.grid_remove()
+            self.dateframe.grid_remove()
+            self.timeframe.grid(column=0, row=0)
             self.currentFrame = self.timeframe
         elif self.currentFrame == self.timeframe:
-            self.timeframe.grid_forget()
-            self.dateframe.grid(column=1, row=1, sticky=S)
+            self.timeframe.grid_remove()
+            self.pingframe.grid_remove()
+            self.dateframe.grid(column=0, row=0)
             self.currentFrame = self.dateframe
         elif self.currentFrame == self.dateframe:
-            self.dateframe.grid_forget()
-            self.pingframe.grid(column=1, row=1, sticky=S)
+            self.dateframe.grid_remove()
+            self.timeframe.grid_remove()
+            self.pingframe.grid(column=0, row=0)
             self.currentFrame = self.pingframe
         else:
-            self.currentFrame.grid_forget()
-            self.pingframe.grid(column=1, row=1, sticky=S)
-            self.currentFrame = self.pingframe
+            self.currentFrame.grid_remove()
+            self.timeframe.grid(column=0, row=0)
+            self.currentFrame = self.timeframe
 
 
 clock = Clock()
